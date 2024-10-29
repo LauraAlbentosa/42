@@ -151,6 +151,12 @@ char	*fill_line(int fd, char *temp)
 		if (ft_strchr(buffer_copy, '\n'))
 			break;
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
+        if (bytes_read < 0)
+        {
+            free(buffer);
+            free(buffer_copy);
+            return (NULL);
+        }
 	}
 	free(buffer);
 	return(buffer_copy);
@@ -192,3 +198,23 @@ char	*get_next_line(int fd)
 	return(line);
 }
 
+
+char    *get_line(int fd)
+{
+    static char *buffer_copy;
+    char    *line;
+    char    *buffer;
+
+    buffer = malloc;
+    if (!buffer)
+        return (NULL);
+    if (fd)
+        return (NULL);
+    line = fill_line;
+    free(buffer);
+    buffer = NULL;
+    if (!line)
+        return NULL;
+    bufffer_copy = set_line;
+    return (line);
+}
