@@ -1,0 +1,308 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    pruebas.txt                                        :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/11/20 17:22:55 by lalbento          #+#    #+#              #
+#    Updated: 2024/11/25 19:09:17 by lalbento         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+#include <fcntl.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+/*
+int ft_strlen(char *s)
+{
+    int i;
+    while(s[i])
+        i++;
+    return(i);
+}
+
+size_t	ft_strlcpy(char *dest, char *src, size_t size)
+{
+	size_t	len_src;
+	size_t	i;
+
+	len_src = ft_strlen(src);
+	i = 0;
+	if (size > 0)
+	{
+		while (src[i] && i < size - 1)
+		{
+			dest[i] = src[i];
+			i++;
+		}
+		dest[i] = '\0';
+	}
+	return (len_src);
+}
+
+int main(int argc, char **argv)
+{
+    char **get_cmd;
+    char    *cmd;
+    int i;
+    int j;
+
+    i = 1;
+    j = 0;
+    get_cmd = malloc((argc + 1) * sizeof(char *));
+    if (!get_cmd)
+        return(1);
+    while (i < argc)
+    {
+        cmd = malloc((ft_strlen(argv[i]) + 1) * sizeof(char));
+        if (!cmd)
+            return(1);
+        ft_strlcpy(cmd, argv[i], ft_strlen(argv[i]) + 1);
+        get_cmd[j] = cmd;
+        i++;
+        j++;
+    }
+    get_cmd[j] = NULL;
+    return(0);
+}
+
+int main(int argc, char **argv, char **env)
+{
+    int fd[2];
+    int pid;
+    char    *infile;
+    char *test_args[] = {"ls -l", infile, NULL};
+    char *test_args2[] = {"grep", "hello", NULL};
+    argv[1] = infile; 
+
+    pid = fork();
+    pipe(fd);
+    if (pid == 0)
+    {
+        dup2(fd[0], 0);
+        close(fd[1]);
+        execve("/usr/bin/grep", test_args2, env);
+    
+    }else{
+        dup2(fd[1], 1);
+        close(fd[0]);
+        execve("/bin/cat", test_args, env);
+    }
+    
+    close(fd[0]);
+    close(fd[1]);
+    waitpid(pid, NULL, 0);
+    return(0); 
+}
+*/
+
+#include <unistd.h>
+#include <stdio.h>
+
+int main(int argc, char **argv, char **envp) {
+    const char *pathname = "/bin/ls";
+    char *const arguments[] = {"/bin/ls", "-l", argv[1], NULL};
+
+    if (execve(pathname, arguments, envp) == -1) {
+        perror("Error al ejecutar execve");
+        return 1;
+    }
+
+    return 0; // Este punto no se alcanzará si execve tiene éxito.
+}
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   boceto.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/22 17:13:45 by lalbento          #+#    #+#             */
+/*   Updated: 2024/11/25 16:05:32 by lalbento         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+
+int main(int argc, char **argv, char **envp)
+{
+    char **path;
+    char *final_path;
+    char **cmds;
+    int pipe_fd[2];
+    int fd_infile = open(argv[1], O_RDONLY);
+    int fd_outfile = open(argv[argc - 1], O_WRONLY| O_CREAT | O_TRUNC, 0644);
+
+    if(argc != 5)
+        return (1); 
+   if (fd_infile < 0)
+   {
+        perror("error");
+        close(fd_outfile);
+        return (1);
+   }
+   if (fd_outfile < 0)
+   {
+        perror("error");
+        close(fd_infile);
+        return (1);
+   }
+    if(pipe(pipe_fd) == -1)
+    {
+        perror("error in pipe");
+        close(fd_infile);
+        close(fd_outfile);
+        return (1);
+    }
+    if (fork() == 0)
+    {
+        close(pipe_fd[0]);
+        if (dup2(fd_infile, STDIN_FILENO) == -1 || dup2(pipe_fd[1], STDOUT_FILENO) == -1)
+        {
+            perror("Error redirecting file descriptors (child 1)");
+            exit(EXIT_FAILURE);
+        }
+        close(fd_infile);
+        close(pipe_fd[1]);
+        cmds = get_cmds(argv[2]);
+        path = get_path(envp);
+        final_path = get_final_path(path, cmds[0]);
+        if (execve_cmds(final_path, envp, cmds) == -1)
+        {
+            perror("Error executing cmd1");
+            exit(EXIT_FAILURE);
+        }
+    }
+    if (fork() == 0)
+    {
+        close(pipe_fd[1]);
+         if (dup2(pipe_fd[0], STDIN_FILENO) == -1 || dup2(fd_outfile, STDOUT_FILENO) == -1)
+        {
+            perror("Error redirecting file descriptors (child 2)");
+            exit(EXIT_FAILURE);
+        }
+        close(fd_outfile);
+        close(pipe_fd[0]);
+        cmds = get_cmds(argv[3]);
+        path = get_path(envp);
+        final_path = get_final_path(path, cmds[0]);
+        if (!execve_cmds(final_path, envp, cmds))
+        {
+            perror("Error executing cmd2");
+            exit(EXIT_FAILURE);
+            
+        }
+    }
+    
+    close(fd_infile);
+    close(fd_outfile);
+    close(pipe_fd[0]);
+    close(pipe_fd[1]);
+    wait(NULL);
+    wait(NULL);
+    return(0);
+}
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/25 16:05:33 by lalbento          #+#    #+#             */
+/*   Updated: 2024/11/25 19:07:42 by lalbento         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+void close_files(int fd1, int fd2)
+{
+    if (fd1 > 0)
+        close(fd1);
+    if (fd2 > 0)
+        close(fd2);
+}
+
+int fork_process(int pipe_fd0, int pipe_fd1, int fd, char *argv, char **envp)
+{
+    char *final_path;
+    char **cmds;
+    //char *path;
+    
+    if (fork() == 0)
+    {
+        close(pipe_fd0);
+        if (redirect_fd(fd, pipe_fd1) == 0)
+        {
+            perror("error");
+            exit(0);
+            return(0);
+        }
+        close_files(fd, pipe_fd1);
+        cmds = get_cmds(argv);
+        if (!cmds)
+        {
+            perror("error");
+            exit(0);
+            return(0);
+        }
+        final_path = get_final_path(get_path(envp), cmds[0]);
+        if (execve_cmds(final_path,  envp, cmds) == 0)
+        {
+            perror("error");
+            exit(0);
+            return(0);
+        } 
+    }
+    return(1);
+}
+
+int main(int argc, char **argv, char **envp)
+{
+    int pipe_fd[2];
+    int fd_infile;
+    int fd_outfile;
+    
+    
+    if (argc != 5)
+        return(1);
+
+    fd_infile = open(argv[1], O_RDONLY);
+    fd_outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (fd_outfile < 0)
+    {
+        close(fd_infile);
+        perror("error");
+        return (1);
+    }
+    if (pipe(pipe_fd) == -1)
+    {
+        perror("error");
+        close_files(fd_infile, fd_outfile);
+        return (1);
+    }
+    if (fork_process(pipe_fd[0], pipe_fd[1], fd_infile, argv[2], envp) == 0)
+    {
+        perror("error");
+        exit(0);
+    }
+    if (fork_process(pipe_fd[1], pipe_fd[0], fd_outfile, argv[3], envp) == 0)
+    {
+        perror("error");
+        exit(0);
+    }
+    close_files(fd_infile, fd_outfile);
+    close_files(pipe_fd[0], pipe_fd[1]);
+    wait(0);
+    wait(0);
+    return (0);
+    
+}
