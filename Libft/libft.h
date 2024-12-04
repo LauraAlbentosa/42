@@ -3,15 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lalbento <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 12:15:00 by lalbento          #+#    #+#             */
-/*   Updated: 2024/10/05 16:42:21 by lalbento         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:03:00 by lalbento         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -68,5 +72,6 @@ char		*ft_strjoin(const char *s1, const char *s2);
 char		**ft_split(char const *s, char c);
 char		*ft_itoa(int n);
 char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
+char		*get_next_line(int fd);
 
 #endif
