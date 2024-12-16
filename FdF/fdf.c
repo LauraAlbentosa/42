@@ -6,7 +6,7 @@
 /*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 12:38:59 by lalbento          #+#    #+#             */
-/*   Updated: 2024/12/12 16:07:29 by lalbento         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:51:26 by lalbento         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int main(int argc, char **argv)
     map_data->max_z = get_maxz(map);
     draw_grid_x(vars, map_data, map);
     draw_grid_y(vars, map_data, map);
-    mlx_hook(vars->win, 2, 1L<<0, my_close, vars);
+    mlx_hook(vars->win, 2, 1L<<0, key_pressed, vars);
+    mlx_hook(vars->win, 17, 1L<<17, close_window, vars);
     mlx_loop(vars->mlx);
     return (0);
 }

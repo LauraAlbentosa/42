@@ -6,7 +6,7 @@
 /*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 12:45:29 by lalbento          #+#    #+#             */
-/*   Updated: 2024/12/12 16:22:51 by lalbento         ###   ########.fr       */
+/*   Updated: 2024/12/16 17:18:25 by lalbento         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ void    free_matrix(char **matrix)
     free(matrix);
 }
 
-void    put_pixel(void *mlx, void *win, t_point *a)
+void    put_pixel(void *mlx, void *win, t_point *a, int color)
 {   
-    mlx_pixel_put(mlx, win, a->x, a->y, a->color);
+    mlx_pixel_put(mlx, win, a->x, a->y, color);
 }
 int get_direction(int x1, int x2)
 {
@@ -51,8 +51,4 @@ void    swap(t_point *a, t_point *b)
     *b = tmp;
 }
 
-int	my_close(t_vars *vars)
-{
-	mlx_destroy_window(vars->mlx, vars->win);
-	return (0);
-}
+

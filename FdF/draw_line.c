@@ -6,7 +6,7 @@
 /*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 12:51:48 by lalbento          #+#    #+#             */
-/*   Updated: 2024/12/12 14:50:05 by lalbento         ###   ########.fr       */
+/*   Updated: 2024/12/16 17:23:46 by lalbento         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,18 @@ void    slope_greater_than_one(t_vars *vars, int dx, int dy, t_line *line)
     int i;
     int sx;
     int sy;
+    double t;
    
     i = 0;
     p = 2 * dy - dx;
     sx = get_direction(line->a->x, line->b->x);
     sy = get_direction(line->a->y, line->b->y);
-    put_pixel(vars->mlx, vars->win, line->a);
-    while (i < dy)
+    
+    while (i <= dy)
     {
+        t = (double)i / dy; // Proporción entre 0 y 1
+        int color = interpolate_color(line->a->color, line->b->color, t);
+        put_pixel(vars->mlx, vars->win, line->a, color);
         line->a->y += sy;
         if (p < 0)
             p += 2 * dx;
@@ -34,7 +38,7 @@ void    slope_greater_than_one(t_vars *vars, int dx, int dy, t_line *line)
             line->a->x += sx;
             p += 2 * dx - 2 * dy;
         }
-        put_pixel(vars->mlx, vars->win, line->a);
+        //put_pixel(vars->mlx, vars->win, line->a, color);
         i++;
     }
 }
@@ -45,14 +49,19 @@ void    slope_less_than_one(t_vars *vars, int dx, int dy, t_line *line)
     int i;
     int sx;
     int sy;
+    double t;
 
     i = 0;
     p = 2 * dy - dx;
     sx = get_direction(line->a->x, line->b->x);
     sy = get_direction(line->a->y, line->b->y);
-    put_pixel(vars->mlx, vars->win, line->a);
-    while (i < dx)
+    
+    
+    while (i <= dx)
     {
+        t = (double)i / dx; // Proporción entre 0 y 1
+        int color = interpolate_color(line->a->color, line->b->color, t);
+        put_pixel(vars->mlx, vars->win, line->a, color);
         line->a->x += sx;
         if (p < 0)
             p = p + 2 * dy;
@@ -61,7 +70,7 @@ void    slope_less_than_one(t_vars *vars, int dx, int dy, t_line *line)
             line->a->y += sy;
             p = p + 2 * dy - 2 * dx;
         }
-        put_pixel(vars->mlx, vars->win, line->a);
+        //put_pixel(vars->mlx, vars->win, line->a, color);
         i++;
     }
 }
