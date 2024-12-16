@@ -6,7 +6,7 @@
 #    By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/25 12:05:19 by lalbento          #+#    #+#              #
-#    Updated: 2024/12/11 16:07:35 by lalbento         ###   ########.fr        #
+#    Updated: 2024/12/16 16:06:19 by lalbento         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ LIBFT = Libft
 LIBFT_A = $(LIBFT)/libft.a
 
 # Source files and derived object files
-SRC = fdf.c parsing.c draw_line.c utils.c transform_points.c colors.c
+SRC = fdf.c parsing.c draw_line.c utils.c transform_points.c colors.c controls.c
 OBJ = $(SRC:.c=.o)
 
 # Compiler and flags
