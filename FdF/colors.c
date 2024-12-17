@@ -6,7 +6,7 @@
 /*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 15:25:03 by lalbento          #+#    #+#             */
-/*   Updated: 2024/12/16 17:19:16 by lalbento         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:04:40 by lalbento         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,14 @@ int get_color(int height, t_map *map_data)
 {
     double ratio;
     int r;
+    int g;
     int b;
 
     ratio = (double)(height - map_data->min_z) / (map_data->max_z - map_data->min_z);
     r = (int)(ratio * 255);
+    g = (int)((1 - fabs(2 * ratio - 1)) * 255);
     b = (int)((1 - ratio) * 255);
-    return (r << 16) | (b);
+    return (r << 16) | (g << 8) | (b);
 }
 
 int interpolate_color(int color1, int color2, double t) 
@@ -131,3 +133,5 @@ int interpolate_color(int color1, int color2, double t)
     int blue = ((1 - t) * (color1 & 0xFF)) + (t * (color2 & 0xFF));
     return (red << 16) | (green << 8) | blue;
 }
+
+

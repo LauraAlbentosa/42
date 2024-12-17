@@ -6,7 +6,7 @@
 /*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:12:24 by lalbento          #+#    #+#             */
-/*   Updated: 2024/12/16 17:18:51 by lalbento         ###   ########.fr       */
+/*   Updated: 2024/12/17 19:24:08 by lalbento         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 #  define MAP_HEIGTH 1080
 #  define MAP_WIDTH 1920
-#  define MARGIN 300
-#  define BASE_COLOR_R 255
-#  define BASE_COLOR_G 255
+#  define MARGIN 200
+#  define BASE_COLOR 0xFAAE7B
+#  define TOP_COLOR 0x432371
 
 #define M_PI 3.14159265358979323846
 
@@ -67,6 +67,11 @@ typedef struct s_map
 typedef struct	s_vars {
 	void	*mlx;
 	void	*win;
+    void    *img;
+    char    *addr;
+    int bits_per_pixel;
+    int line_length;
+    int endian;
 }				t_vars;
 
 //parsing
@@ -84,16 +89,17 @@ void    draw_grid_x(t_vars *vars, t_map *map_data, char **map);
 void    draw_grid_y(t_vars *vars, t_map *map_data, char **map);
 
 //utils
-void    put_pixel(void *mlx, void *win, t_point *a, int color);
 void    free_matrix(char **matrix);
 int get_direction(int x1, int x2);
 void    swap(t_point *a, t_point *b);
+void put_pixel_to_image(t_vars *vars, int x, int y, int color);
+unsigned int ft_atoi_hex(char *str);
 
 //transform points
-t_point *get_point(int i, int j, int z, t_map *map_data);
-t_point *isometric(int x, int y, int z);
-int get_scale(t_map *map_data);
-void    scale_points(int i, int j, int z, t_map *map_data);
+t_point *get_point(int i, int j, char **extra_data, t_map *map_data);
+void isometric(int *x, int *y, int z);
+double get_scale(t_map *map_data);
+void    scale_points(int *i, int *j, int *z, t_map *map_data);
 
 //color
 int rgb_to_int(int r, int g, int b);

@@ -6,7 +6,7 @@
 /*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 12:51:48 by lalbento          #+#    #+#             */
-/*   Updated: 2024/12/16 17:23:46 by lalbento         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:55:03 by lalbento         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void    slope_greater_than_one(t_vars *vars, int dx, int dy, t_line *line)
     {
         t = (double)i / dy; // Proporción entre 0 y 1
         int color = interpolate_color(line->a->color, line->b->color, t);
-        put_pixel(vars->mlx, vars->win, line->a, color);
+        put_pixel_to_image(vars, line->a->x, line->a->y, color);
         line->a->y += sy;
         if (p < 0)
             p += 2 * dx;
@@ -61,7 +61,7 @@ void    slope_less_than_one(t_vars *vars, int dx, int dy, t_line *line)
     {
         t = (double)i / dx; // Proporción entre 0 y 1
         int color = interpolate_color(line->a->color, line->b->color, t);
-        put_pixel(vars->mlx, vars->win, line->a, color);
+        put_pixel_to_image(vars, line->a->x, line->a->y, color);
         line->a->x += sx;
         if (p < 0)
             p = p + 2 * dy;
@@ -114,8 +114,11 @@ void    draw_grid_y(t_vars *vars, t_map *map_data, char **map)
             data2 = ft_split(map[i + 1], ' ');
             while(data2[j])
             {
-                line->a = get_point(i, j, ft_atoi(data[j]), map_data);
-                line->b = get_point(i + 1, j, ft_atoi(data2[j]), map_data);
+                //line->a = get_point(i, j, ft_atoi(data[j]), map_data);
+                //line->b = get_point(i + 1, j, ft_atoi(data2[j]), map_data);
+
+                line->a = get_point(i, j, ft_split(data[j], ','), map_data);
+                line->b = get_point(i + 1, j, ft_split(data2[j], ','), map_data);
                 draw_line(vars, line);
                 j++;
             }
@@ -140,8 +143,11 @@ void    draw_grid_x(t_vars *vars, t_map *map_data, char **map)
         data = ft_split(map[i], ' ');
         while (j < map_data->width - 1)
         {
-            line->a = get_point(i, j, ft_atoi(data[j]), map_data);
-            line->b = get_point(i, j + 1, ft_atoi(data[j + 1]), map_data);
+            //line->a = get_point(i, j, ft_atoi(data[j]), map_data);
+            //line->b = get_point(i, j + 1, ft_atoi(data[j + 1]), map_data);
+
+            line->a = get_point(i, j, ft_split(data[j], ','), map_data);
+            line->b = get_point(i, j + 1, ft_split(data[j + 1], ','), map_data);
             draw_line(vars, line);
             j++;
         }

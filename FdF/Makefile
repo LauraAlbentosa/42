@@ -6,7 +6,7 @@
 #    By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/25 12:05:19 by lalbento          #+#    #+#              #
-#    Updated: 2024/12/16 16:06:19 by lalbento         ###   ########.fr        #
+#    Updated: 2024/12/17 19:19:05 by lalbento         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,13 +21,17 @@ MLX_A = $(MLX)/libmlx.a
 LIBFT = Libft
 LIBFT_A = $(LIBFT)/libft.a
 
+# Compiler and flags
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror
+
 # Source files and derived object files
 SRC = fdf.c parsing.c draw_line.c utils.c transform_points.c colors.c controls.c
 OBJ = $(SRC:.c=.o)
 
-# Compiler and flags
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+#Bonus files
+BONUS = 
+BONUS_OBJ = $(BONUS:.c=.o)
 
 # Default target
 all: $(NAME)
@@ -52,7 +56,7 @@ $(LIBFT_A):
 
 # Clean up object files
 clean:
-	@rm -f $(OBJ)
+	@rm -f $(OBJ) $(BONUS_OBJ)
 	@$(MAKE) -s -C $(MLX) clean
 	@$(MAKE) -s -C $(LIBFT) clean
 	@echo "Cleaned object files"
@@ -60,12 +64,20 @@ clean:
 # Clean up all generated files (including executable)
 fclean: clean
 	@rm -f $(NAME)
+	@rm -f $(OBJ) $(BONUS_OBJ)
 	@$(MAKE) -s -C $(MLX) fclean
 	@$(MAKE) -s -C $(LIBFT) fclean
 	@echo "Cleaned all generated files"
 
 # Rebuild everything
-re: fclean all
+re: clean all
+
+#It compiles the bonus files avoiding relink with the bonus.bonus file
+bonus: bonus.bonus
+bonus.bonus:$(BONUS_OBJ) $(OBJ)
+	@ar rcs $(NAME) $(OBJ) $(BONUS_OBJ)
+	touch bonus.bonus
+	@echo "$(NAME) created and indexed with bonus"
 
 # Declare non-file targets
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus

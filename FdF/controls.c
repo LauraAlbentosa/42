@@ -6,7 +6,7 @@
 /*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 16:06:06 by lalbento          #+#    #+#             */
-/*   Updated: 2024/12/16 16:50:40 by lalbento         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:11:57 by lalbento         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	close_window(t_vars *vars)
 {
     mlx_destroy_window(vars->mlx, vars->win);
+    mlx_destroy_image(vars->mlx, vars->img);
     exit(0);
 }
 
