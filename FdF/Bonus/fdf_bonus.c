@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.c                                              :+:      :+:    :+:   */
+/*   fdf_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/09 12:38:59 by lalbento          #+#    #+#             */
-/*   Updated: 2024/12/17 19:39:09 by lalbento         ###   ########.fr       */
+/*   Created: 2024/12/16 19:48:39 by lalbento          #+#    #+#             */
+/*   Updated: 2024/12/16 19:49:23 by lalbento         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,9 @@ int main(int argc, char **argv)
 
     mlx_put_image_to_window(vars->mlx, vars->win, vars->img, 0, 0);
 
-    mlx_hook(vars->win, 2, 1L<<0, key_pressed, vars);
-    mlx_hook(vars->win, 17, 1L<<17, close_program, vars);
+    mlx_hook(vars->win, 2, 1L<<0, close_window, vars);
+    mlx_hook(vars->win, 17, 1L<<17, close_window, vars);
     mlx_loop(vars->mlx);
-    
-    free_matrix(map);
-    free(vars);
-    free(map_data);
     return (0);
 }
 
-  

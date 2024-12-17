@@ -6,7 +6,7 @@
 /*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:12:24 by lalbento          #+#    #+#             */
-/*   Updated: 2024/12/17 19:24:08 by lalbento         ###   ########.fr       */
+/*   Updated: 2024/12/17 19:38:52 by lalbento         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,10 @@ void    scale_points(int *i, int *j, int *z, t_map *map_data);
 int rgb_to_int(int r, int g, int b);
 int get_color(int z, t_map *map_data);
 int interpolate_color(int color1, int color2, double t);
+int close_program(t_vars *vars);
+void cleanup_display(t_vars *vars);
+void cleanup_images(t_vars *vars);
+void cleanup_window(t_vars *vars);
 
 //controls
 int	close_window(t_vars *vars);
