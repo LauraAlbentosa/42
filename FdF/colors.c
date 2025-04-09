@@ -111,6 +111,21 @@ int get_color(int z, t_map *map_data)
 
 */
 
+/* IDEA PARA GENERAR BIEN EL COLOR CHATTY
+
+int	get_color/int z) 
+{
+	if (z > 10)
+ 		retunr 0xFF0000; //Rojo
+   	else if (z > 5)
+    		return 0xFF
+      	else
+       		return 0xFF
+}
+
+
+
+*/
 
 int get_color(int height, t_map *map_data)
 {
