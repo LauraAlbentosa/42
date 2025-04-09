@@ -113,6 +113,10 @@ int get_color(int z, t_map *map_data)
 
 /* IDEA PARA GENERAR BIEN EL COLOR CHATTY
 
+
+La movida es que cuando el color me lo da el mapa en hexa funcionaba y me cogía bien los colores. Mi problem es generar el gradiente. 
+Según lo que tengo aquí lo hago mis puntos pueden tener 3 colores --- NO. 
+
 int	get_color/int z) 
 {
 	if (z > 10)
