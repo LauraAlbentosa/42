@@ -22,26 +22,26 @@ void    current_index(t_stack *stack)
 
 }
 
-static void set_target(t_stack *a, t_stack *b)
+void set_target_a(t_stack *a, t_stack *b)
 {
     t_stack *current_b;
     t_stack *target;
-    int best;
+    int match;
 
     while(a)
     {
-        best = INT_MIN;
+        match = INT_MIN;
         current_b = b;
         while(current_b)
         {
-            if (current_b->num < a->num && current_b->num > best)
+            if (current_b->num < a->num && current_b->num > match)
             {
-                best = current_b->num;
+                match = current_b->num;
                 target = current_b;
             }
             current_b = current_b->next;
         }
-        if (best == INT_MIN)
+        if (match == INT_MIN)
             a->target_node = find_max(b);
         else
             a->target_node = target;
@@ -49,7 +49,34 @@ static void set_target(t_stack *a, t_stack *b)
     }
 }
 
-static void cost(t_stack *a, t_stack *b)
+void    set_target_b(t_stack *a, t_stack *b)
+{
+    t_stack *current_a;
+    t_stack *target;
+    int match;
+
+    while(b)
+    {
+        match = INT_MAX;
+        current_a = a;
+        while (current_a)
+        {
+            if (current_a->num > b->num && current_a->num < match)
+            {
+                match = current_a->num;
+                target = current_a;
+            }
+            current_a = current_a->next;
+        }
+        if (match == INT_MAX)
+            b->target_node = find_min(a);
+        else
+            b->target_node = target;
+        b = b->next; 
+    }
+}
+
+void cost(t_stack *a, t_stack *b)
 {
     int len_a;
     int len_b;
@@ -72,7 +99,7 @@ static void cost(t_stack *a, t_stack *b)
 void    cheapest(t_stack *stack)
 {
     int cheapest_value;
-    t_stack cheap_node;
+    t_stack *cheap_node;
 
     if (!stack)
         return;
@@ -89,12 +116,17 @@ void    cheapest(t_stack *stack)
     cheap_node->cheapest = 1;
 }
 
-void    inti_a(t_stack *a, t_stack *b)
+t_stack *get_cheapest(t_stack *stack)
 {
-    current_index(a);
-    current_index(b);
-    set_target(a, b);
-    cost(a, b);
-    cheapest(a);
+    if (!stack)
+        return (NULL);
+    while(stack)
+    {
+        if (stack->cheapest)
+            return (stack);
+        stack = stack->next;
+    }
+    return (NULL);
 }
+
 

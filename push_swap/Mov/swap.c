@@ -18,7 +18,7 @@ void    swap_a(t_stack **stack)
     t_stack *second;
     int len;
     
-    len = stack_len(stack);
+    len = stack_len(*stack);
     if (len < 2)
         return;
         
@@ -36,7 +36,7 @@ void    swap_b(t_stack **stack)
     t_stack *second;
     int len;
     
-    len = stack_len(stack);
+    len = stack_len(*stack);
     if (len < 2)
         return;
         

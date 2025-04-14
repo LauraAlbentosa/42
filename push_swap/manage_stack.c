@@ -7,8 +7,8 @@ void    append_node(t_stack **stack, int n)
 
     if (!stack)
         return;
-    node = malloc(sizeof(t_stack));
-    if (!node)
+    new = malloc(sizeof(t_stack));
+    if (!new)
         return;
     new->next = NULL;
     new->num = n;
@@ -19,7 +19,7 @@ void    append_node(t_stack **stack, int n)
     }
     else
     {
-        las = find_last(*stack);
+        last = find_last(*stack);
         last->next = new;
         new->prev = last;
     }
@@ -33,13 +33,13 @@ void    create_stack_a(t_stack **a, char **numbers)
     i = 0;
     while(numbers[i])
     {
-        if(error_syntax(numbers[i]))
-            free_errors(a);
+        if(is_number(numbers[i]))
+            display_error(a);
         n = ft_atoi(numbers[i]);
         if (n > INT_MAX || n < INT_MIN)
-            free_errors(a);
+            display_error(a);
         if(duplicates(*a, n))
-            free_errors(a);
+            display_error(a);
         append_node(a, n);
         i++;
     }

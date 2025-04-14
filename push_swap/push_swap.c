@@ -16,7 +16,7 @@ int    sorted(t_stack *stack)
 
 void    sort_three(t_stack **a)
 {
-    t_stack **max;
+    t_stack *max;
 
     max = find_max(*a);
     if(max == *a)
@@ -39,13 +39,13 @@ void    sort_stacks(t_stack **a, t_stack **b)
     while(len_a - 1 > 3 && !sorted(*a))
     {
         init_a(*a, *b);
-        move_a_b(a,b);
+        a_b(a,b);
     }
     sort_three(a);
     while(*b)
     {
         init_b(*a,*b);
-        move_b_a(a,b);
+        b_a(a,b);
     }
     current_index(*a);
     check_min(a);

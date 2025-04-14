@@ -39,16 +39,38 @@ void    sort_stacks(t_stack **a, t_stack **b);
 //sort utils
 void    cheapest(t_stack *stack);
 void    current_index(t_stack *stack);
-void    inti_a(t_stack *a, t_stack *b);
+void    init_a(t_stack *a, t_stack *b);
+void    init_b(t_stack *a, t_stack *b);
+void    set_target_b(t_stack *a, t_stack *b);
+void set_target_a(t_stack *a, t_stack *b);
+void    a_b(t_stack **a, t_stack **b);
+void b_a(t_stack **a, t_stack **b) ;
+void cost(t_stack *a, t_stack *b);
+t_stack *get_cheapest(t_stack *stack);
+
+
+
 //manage stacks
 void    create_stack_a(t_stack **a, char **numbers);
 void    append_node(t_stack **stack, int n);
+
+
+//stack utils
+int stack_len(t_stack *stack);
+void    node_to_top(t_stack **stack, t_stack *top, char stack_name);
+t_stack *find_last(t_stack *stack);
 t_stack *find_max(t_stack *stack);
+t_stack *find_min(t_stack *stack);
+void	check_min(t_stack **a);
+
 
 //utils
-void    display_error(void);
-int stack_len(t_stack **stack);
-t_stack *find_last(t_stack *stack);
+void    display_error(t_stack **stack);
+int duplicates(t_stack *stack, int n);
+int is_number(char  *str);
+void free_stacks(t_stack **stack);
+void    display_error(t_stack **stack);
+
 
 //movs
 void    push_a(t_stack **stack_a, t_stack **stack_b);

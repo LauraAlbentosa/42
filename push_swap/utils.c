@@ -1,33 +1,63 @@
 #include "push_swap.h"
 
-void    display_error(void)
+void    display_error(t_stack **stack)
 {
+    free_stacks(stack);
     write(2, "Error\n", 6);
     exit(1);
 }
 
-t_stack *find_last(t_stack *stack)
+void free_stacks(t_stack **stack)
 {
-    if(!stack)
-        return (NULL);
-    while(stack->next)
-        stack = stack->next;
-    return (stack);
-}
-
-
-int stack_len(t_stack **stack)
-{
-    int i;
+    t_stack *temp;
     t_stack *current;
-
-    i = 0;
+    if (!stack)
+        return;
     current = *stack;
     while(current)
     {
-        current = current->next;
-        i++;
+        temp = current->next;
+        current->num = 0;
+        free(current);
+        current = temp;
     }
-    return(i);
+    *stack = NULL;
 }
 
+int is_number(char  *str)
+{
+    if (!(*str == '+'|| *str == '-' || (*str >= '0' && *str <= '9')))
+        return (1);
+    if ((*str == '+'|| *str == '-' )|| !(str[1] >= '0' && str[1] <= '9'))
+        return (1);
+    while (*str)
+    {
+        if (!(*str >= '0' && *str <= '9'))
+            return (1);
+    }
+    return (0);
+}
+
+int duplicates(t_stack *stack, int n)
+{
+    if (!stack)
+        return (0);
+    while (stack)
+    {
+        if (stack->num == n)
+            return (1);
+        stack = stack->next;
+    }
+    return (0);
+}
+
+void	check_min(t_stack **a) 
+{
+	while ((*a)->num != find_min(*a)->num) 
+	{
+		if (find_min(*a)->medium) 
+			ra(a);
+		else
+			rra(a);
+	}
+}
