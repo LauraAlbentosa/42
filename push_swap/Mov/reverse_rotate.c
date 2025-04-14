@@ -12,7 +12,7 @@
 
 #include "../push_swap.h"
 
-void    reverse_rotate(t_stack **stack)
+/*void    reverse_rotate(t_stack **stack)
 {
     t_stack *current;
     t_stack *second_last;
@@ -30,6 +30,32 @@ void    reverse_rotate(t_stack **stack)
     last->next = *stack;
     *stack = last;
 }
+ */
+
+void reverse_rotate(t_stack **stack)
+{
+    t_stack *current;
+    t_stack *second_last;
+    t_stack *last;
+
+    if (!*stack || !(*stack)->next)
+        return;  // Asegurarse de que hay al menos dos elementos
+
+    current = *stack;
+    while (current->next && current->next->next)
+        current = current->next;
+
+    second_last = current;
+    last = current->next;
+
+    second_last->next = NULL;
+    last->next = *stack;
+    if (*stack)
+        (*stack)->prev = last;
+    *stack = last;
+}
+
+
 
 void    rra(t_stack **a)
 {

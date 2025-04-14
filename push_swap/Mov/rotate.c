@@ -12,6 +12,8 @@
 
 #include "../push_swap.h"
 
+/*
+
 void    rotate(t_stack **stack)
 {
     t_stack *current;
@@ -27,6 +29,28 @@ void    rotate(t_stack **stack)
     *stack = first->next;
     first->next = NULL;
 }
+*/
+
+void rotate(t_stack **stack)
+{
+    t_stack *current;
+    t_stack *first;
+
+    if (!*stack || !(*stack)->next)
+        return;
+
+    first = *stack;
+    current = *stack;
+    
+    while (current->next)
+        current = current->next;
+
+    current->next = first;
+    first->prev = current;  // Establece el puntero prev del primer nodo
+    *stack = first->next;
+    first->next = NULL;
+}
+
 
 void    ra(t_stack **a)
 {

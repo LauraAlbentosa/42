@@ -95,7 +95,7 @@ void cost(t_stack *a, t_stack *b)
         a = a->next;
     }
 }
-
+/*
 void    cheapest(t_stack *stack)
 {
     int cheapest_value;
@@ -115,6 +115,33 @@ void    cheapest(t_stack *stack)
     }
     cheap_node->cheapest = 1;
 }
+
+*/
+
+void cheapest(t_stack *stack)
+{
+    int cheapest_value;
+    t_stack *cheap_node;
+    //t_stack *head = stack;
+
+    if (!stack)
+        return;
+
+    cheapest_value = INT_MAX;
+    while (stack)
+    {
+        stack->cheapest = 0;  // <- Limpia antes
+        if (stack->cost < cheapest_value)
+        {
+            cheapest_value = stack->cost;
+            cheap_node = stack;
+        }
+        stack = stack->next;
+    }
+    if (cheap_node)
+        cheap_node->cheapest = 1;
+}
+
 
 t_stack *get_cheapest(t_stack *stack)
 {

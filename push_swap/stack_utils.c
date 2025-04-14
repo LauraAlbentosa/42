@@ -23,7 +23,7 @@ int stack_len(t_stack *stack)
     }
     return(i);
 }
-
+/*
 void    node_to_top(t_stack **stack, t_stack *top, char stack_name)
 {
     while (*stack != top)
@@ -44,6 +44,32 @@ void    node_to_top(t_stack **stack, t_stack *top, char stack_name)
         }
     }
 }
+*/
+
+void node_to_top(t_stack **stack, t_stack *top, char stack_name)
+{
+    if (!stack || !*stack || !top)
+        return;
+
+    while (*stack != top)
+    {
+        if (stack_name == 'a')
+        {
+            if (top->medium)
+                ra(stack);
+            else
+                rra(stack);
+        }
+        else if (stack_name == 'b')
+        {
+            if (top->medium)
+                rb(stack);
+            else
+                rrb(stack);
+        }
+    }
+}
+
 
 t_stack *find_min(t_stack *stack)
 {

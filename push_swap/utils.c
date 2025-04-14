@@ -6,7 +6,7 @@ void    display_error(t_stack **stack)
     write(2, "Error\n", 6);
     exit(1);
 }
-
+/*
 void free_stacks(t_stack **stack)
 {
     t_stack *temp;
@@ -23,6 +23,27 @@ void free_stacks(t_stack **stack)
     }
     *stack = NULL;
 }
+
+*/
+
+void free_stacks(t_stack **stack)
+{
+    t_stack *temp;
+    t_stack *current;
+
+    if (!stack || !*stack)
+        return;
+
+    current = *stack;
+    while (current)
+    {
+        temp = current->next;
+        free(current);
+        current = temp;
+    }
+    *stack = NULL;
+}
+
 
 int	is_number(char *str)
 {

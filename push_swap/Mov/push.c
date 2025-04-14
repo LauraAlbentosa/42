@@ -12,6 +12,7 @@
 
 #include "../push_swap.h"
 
+/*
 void    push_a(t_stack **stack_a, t_stack **stack_b)
 {
     t_stack *first_b;
@@ -34,6 +35,59 @@ void    push_b(t_stack **stack_a, t_stack **stack_b)
     first_a = *stack_a;
     *stack_a = (*stack_a)->next;
     first_a->next = *stack_b;
+    *stack_b = first_a;
+    write(1, "pb\n", 3);
+}
+
+
+
+
+void push_b(t_stack **stack_a, t_stack **stack_b)
+{
+    t_stack *first_b;
+
+    if (!*stack_b)
+        return;
+    first_b = *stack_b;
+    *stack_b = (*stack_b)->next;
+    if (*stack_b)
+        (*stack_b)->prev = NULL;
+    first_b->next = *stack_a;
+    if (*stack_a)
+        (*stack_a)->prev = first_b;
+    *stack_a = first_b;
+    write(1, "pb\n", 3);
+}
+*/
+void push_a(t_stack **stack_a, t_stack **stack_b)
+{
+    t_stack *first_b;
+
+    if (!*stack_b)
+        return;
+    first_b = *stack_b;
+    *stack_b = (*stack_b)->next;
+    if (*stack_b)
+        (*stack_b)->prev = NULL;  // Asegurarse de que el siguiente nodo apunta a NULL
+    first_b->next = *stack_a;
+    if (*stack_a)
+        (*stack_a)->prev = first_b;  // Asegurarse de que el nodo de destino apunta correctamente al primero
+    *stack_a = first_b;
+    write(1, "pa\n", 3);
+}
+void push_b(t_stack **stack_a, t_stack **stack_b)
+{
+    t_stack *first_a;
+
+    if (!*stack_a)
+        return;
+    first_a = *stack_a;
+    *stack_a = (*stack_a)->next;
+    if (*stack_a)
+        (*stack_a)->prev = NULL;
+    first_a->next = *stack_b;
+    if (*stack_b)
+        (*stack_b)->prev = first_a;
     *stack_b = first_a;
     write(1, "pb\n", 3);
 }
