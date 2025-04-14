@@ -19,4 +19,3 @@ void b_a(t_stack **a, t_stack **b)
 	node_to_top(a, (*b)->target_node, 'a'); 
 	push_a(a, b); 
 }
-

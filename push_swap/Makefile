@@ -22,7 +22,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 # Source files and derived object files
-SRC = push_swap.c stack_utils.c sort_utils.c utils.c manage_stack.c init_sort.c sort_utils_2.C main.c Mov/swap.c Mov/rotate.c Mov/push.c Mov/reverse_rotate.c
+SRC = push_swap.c stack_utils.c sort_utils.c utils.c manage_stack.c init_sort.c sort_utils_2.c main.c Mov/swap.c Mov/rotate.c Mov/push.c Mov/reverse_rotate.c
 OBJ = $(SRC:.c=.o)
 
 # Default target

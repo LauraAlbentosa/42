@@ -34,12 +34,18 @@ void    create_stack_a(t_stack **a, char **numbers)
     while(numbers[i])
     {
         if(is_number(numbers[i]))
+        {
+            printf("is_number falla");
             display_error(a);
+        }
         n = ft_atoi(numbers[i]);
         if (n > INT_MAX || n < INT_MIN)
             display_error(a);
         if(duplicates(*a, n))
+        {
+            printf("duplicates falla");
             display_error(a);
+        }
         append_node(a, n);
         i++;
     }

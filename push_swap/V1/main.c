@@ -12,7 +12,7 @@
 
 #include "push_swap.h"
 
-
+/*
 intmain(int argc, char **argv)
 {
     t_stack *stack_a;
@@ -41,7 +41,7 @@ intmain(int argc, char **argv)
     return(0);
 }
 
-/*
+
 int main(int argc, char **argv)
 {
     char    **array_numbers;

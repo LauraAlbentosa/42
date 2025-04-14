@@ -24,17 +24,24 @@ void free_stacks(t_stack **stack)
     *stack = NULL;
 }
 
-int is_number(char  *str)
+int	is_number(char *str)
 {
-    if (!(*str == '+'|| *str == '-' || (*str >= '0' && *str <= '9')))
+    if (!str)  
         return (1);
-    if ((*str == '+'|| *str == '-' )|| !(str[1] >= '0' && str[1] <= '9'))
+    if (*str == '\0')  
         return (1);
-    while (*str)
+    
+    if (!(*str == '+' || *str == '-' || (*str >= '0' && *str <= '9'))) 
+        return (1);
+    if ((*str == '+' || *str == '-') && !(str[1] >= '0' && str[1] <= '9')) 
+        return (1);
+    
+    while (*++str) 
     {
-        if (!(*str >= '0' && *str <= '9'))
+        if (!(*str >= '0' && *str <= '9')) 
             return (1);
     }
+    
     return (0);
 }
 

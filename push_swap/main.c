@@ -1,4 +1,14 @@
-# include "push_swap.c"
+# include "push_swap.h"
+
+static void print_stack(t_stack *stack)
+{
+    while (stack)
+    {
+        printf("num: %d\n", stack->num);
+        stack = stack->next;
+    }
+}
+
 
 int main(int argc, char** argv)
 {
@@ -15,6 +25,7 @@ int main(int argc, char** argv)
     else 
         numbers = &argv[1];
     create_stack_a(&a, numbers);
+    print_stack(a);
     if (!sorted(a))
     {
         if (stack_len(a) == 2)
