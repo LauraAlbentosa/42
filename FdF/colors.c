@@ -1,137 +1,56 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   colors.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/12 15:25:03 by lalbento          #+#    #+#             */
-/*   Updated: 2024/12/17 17:04:40 by lalbento         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 # include "fdf.h"
 
-/*
-int rgb_to_int(int r, int g, int b)
+int interpolate(int start, int end, float ratio)
 {
-    int color = 0;
-    
-    color |= (int)(b * 255);
-    color |= (int)(g * 255) << 8;
-    color |= (int)(r * 255) << 16;
-    return (color);
+    int inter;
+    inter = (int)(start + (end - start) * ratio);
+    return (inter);
 }
 
-int   gradient_fraction(t_point *a, t_point *b)
+int rgb_to_int(t_color *color)
 {
-    int fraction;
+    int result;
 
-    if (abs(a->x - b->x) > abs(a->y - b->y))
-        fraction = abs(a->x - b->x);
-    else
-        fraction = abs(a->y - b->y);
-    return (fraction);
-    return sqrt(pow(b->x - a->x, 2) + pow(b->y - a->y, 2));
+    result = 0;
+    result |= (int)(color->r * 255) << 16;
+    result |= (int)(color->g * 255) << 8;
+    result |= (int)(color->b * 255);
+    return (result);
 }
-t_color *get_color_gradient(int fraction, t_color *color1, t_color *color2)
+
+int get_gradient(int z, int min_z, int max_z)
 {
-    t_color *color_increment =  malloc(sizeof(t_color));
-    if (!color_increment)
+    float ratio;
+    int final_color;
+    t_color *color;
+
+    color = malloc(sizeof(t_color));
+    if (!color)
         return(0);
 
-    color_increment->r = (int)(color1->r + (color2->r - color1->r) / (1.0/fraction));
-    color_increment->g = (int)(color1->g + (color2->g - color1->g) / (1.0/fraction));
-    color_increment->b = (int)(color1->b + (color2->b - color1->b) / (1.0/fraction));
-
-    return (color_increment);
-}
-int get_final_color(t_color *increment, t_color *base_color)
-{
-    t_color *final_color = malloc(sizeof(t_color));
-    int final;
+    if (max_z == min_z)
+        ratio = 1;
+    else 
+        ratio = (float)(z - min_z) / (max_z - min_z);
     
-    final_color->r = increment->r + base_color->r;
-    final_color->g = increment->g + base_color->g;
-    final_color->b = increment->b + base_color->b;
-    
-    final = rgb_to_int(final_color->r, final_color->g, final_color->b);
-    return (final);
+    color->r = interpolate((start_color >> 16) & 0xFF, (end_color >> 16) & 0xFF, ratio);
+	color->g = interpolate((start_color >> 8) & 0xFF, (end_color >> 8) & 0xFF, ratio);
+	color->b = interpolate(start_color & 0xFF, end_color & 0xFF, ratio);
+
+    final_color = rgb_to_int(color);
+    return(final_color);
 }
 
-int get_color(int z, t_map *map_data)
-{
-    double			percent;
-	unsigned int	max;
-
-	max = map_data->max_z - map_data->min_z;
-	if (max == 0)
-		return (0x432371);
-	percent = ((double)(z - map_data->min_z) / max);
-	if (percent < 0.2)
-		return (0x432371);
-	else if (percent < 0.4)
-		return (0x714674);
-	else if (percent < 0.6)
-		return (0x9F6976);
-	else if (percent < 0.8)
-		return (0x432371);
-	else
-		return (0xFAAE7B);
-}
-
-
-int gradient(int color1, int color2, int z, t_map *map_data, t_point *a)
-{
-    int inc;
-    int steps;
-
-    inc = color1 - color2;
-    steps = ...;
-    final_inc = inc/steps;
-
-    final_color = color1 + fina_inc;
-    return(final_inc);
-    
-}
-
-
-int get_color(int z, t_map *map_data)
+int get_color(int z, int min_z, int max_z)
 {
     int color;
-    
-    if (map_data->max_z == map_data->min_z)
-        color = 0x432371;
-    else if (z == map_data->max_z)
-        color = 0xFAAE7B;
-    else if (z == map_data->min_z)
-        color = 0x432371;
-    return(color);
+
+    if (z == max_z)
+        color = TOP_COLOR;
+    else if (z == min_z)
+        color = BASE_COLOR;
+    else
+        color = get_gradient(z, min_z, max_z);
+
+    return (color);
 }
-
-*/
-
-
-int get_color(int height, t_map *map_data)
-{
-    double ratio;
-    int r;
-    int g;
-    int b;
-
-    ratio = (double)(height - map_data->min_z) / (map_data->max_z - map_data->min_z);
-    r = (int)(ratio * 255);
-    g = (int)((1 - fabs(2 * ratio - 1)) * 255);
-    b = (int)((1 - ratio) * 255);
-    return (r << 16) | (g << 8) | (b);
-}
-
-int interpolate_color(int color1, int color2, double t) 
-{
-    int red = ((1 - t) * ((color1 >> 16) & 0xFF)) + (t * ((color2 >> 16) & 0xFF));
-    int green = ((1 - t) * ((color1 >> 8) & 0xFF)) + (t * ((color2 >> 8) & 0xFF));
-    int blue = ((1 - t) * (color1 & 0xFF)) + (t * (color2 & 0xFF));
-    return (red << 16) | (green << 8) | blue;
-}
-
-

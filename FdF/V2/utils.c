@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/08 12:45:29 by lalbento          #+#    #+#             */
+/*   Updated: 2024/12/17 19:10:56 by lalbento         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # include "fdf.h"
 
 void    free_matrix(char **matrix)
@@ -7,13 +19,14 @@ void    free_matrix(char **matrix)
     if (!matrix)
         return;
     i = 0;
-    while(matrix[i])
+    while (matrix[i]) 
     {
-        free(matrix[i]);
+        free(matrix[i]); 
         i++;
     }
     free(matrix);
 }
+
 int get_direction(int x1, int x2)
 {
     int sx;
@@ -59,6 +72,7 @@ unsigned int ft_atoi_hex(char *str)
     {
         digit = str[i];
         num *= 16;
+
         if (digit >= '0' && digit <= '9')
             num += digit - '0';
         else if (digit >= 'a' && digit <= 'f')
@@ -71,4 +85,3 @@ unsigned int ft_atoi_hex(char *str)
     }
     return (num);
 }
-

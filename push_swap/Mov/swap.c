@@ -27,4 +27,23 @@ void    swap_a(t_stack **stack)
     first->next = second->next;
     second->next = first;
     *stack = second;
+    write(1, "sa\n", 3);
+}
+
+void    swap_b(t_stack **stack)
+{
+    t_stack *first;
+    t_stack *second;
+    int len;
+    
+    len = stack_len(stack);
+    if (len < 2)
+        return;
+        
+    first = *stack;
+    second = first->next;
+    first->next = second->next;
+    second->next = first;
+    *stack = second;
+    write(1, "sb\n", 3);
 }

@@ -1,0 +1,583 @@
+# include "fdf.h"
+
+int get_heigth(char *filename)
+{
+    int fd;
+    int heigth;
+    char    *line;
+
+    heigth = 0;
+    fd = open(filename, O_RDONLY);
+    if (fd < 0)
+        return (0);
+    line = get_next_line(fd);
+    if (!line)
+        return (0);
+    while (line)
+    {
+        heigth++;
+        free(line);
+        line = get_next_line(fd);
+    }
+    free(line);
+    close(fd);
+    return(heigth);
+}
+
+char    **get_map(char *filename, int size)
+{
+    int fd;
+    int i;
+    char    **map;
+    char *line;
+
+    i = 0;
+    fd = open(filename, O_RDONLY);
+    if (fd < 0)
+        return(NULL);
+    map = malloc((size + 1) * sizeof(char *));
+    if (!map)
+        return (NULL);
+    line = get_next_line(fd);
+    if (!line)
+        return (NULL);
+    while (line)
+    {
+        map[i] = line;
+        line = get_next_line(fd);
+        i++;
+    }
+    free(line);
+    map[i] = NULL;
+    close(fd);
+    return (map);
+}
+
+int get_width(char **map)
+{
+    int width;
+    char    **line;
+
+    width = 0;
+    line = ft_split(map[0], ' ');
+    if (!line)
+        return (0);
+    while (line[width])
+        width++;
+    return (width);
+}
+
+int get_minz(char **map)
+{
+    int i;
+    int j;
+    int minz;
+    char    **line;
+
+    i = 0;
+    minz = 0;
+    while (map[i])
+    {
+        j = 0;
+        line = ft_split(map[i], ' ');
+        if (!line)
+            return (0);
+        while(line[j])
+        {
+            if (minz > ft_atoi(line[j]))
+                minz = ft_atoi(line[j]);
+            j++;
+        }
+        free_matrix(line);
+        i++;
+    }
+    return (minz);   
+}
+
+int get_maxz(char **map)
+{
+    int i;
+    int j;
+    int maxz;
+    char    **line;
+
+    i = 0;
+    maxz = 0;
+    while (map[i])
+    {
+        j = 0;
+        line = ft_split(map[i], ' ');
+        if (!line)
+            return (0);
+        while (line[j])
+        {
+            if (maxz < ft_atoi(line[j]))
+                maxz = ft_atoi(line[j]);
+            j++;
+        }
+        free_matrix(line);
+        i++;
+    }
+    return (maxz);
+}
+# include "fdf.h"
+
+void    slope_greater_than_one(t_vars *vars, int dx, int dy, t_line *line)
+{
+    int p;
+    int i;
+    int sx;
+    int sy;
+   
+    i = 0;
+    p = 2 * dy - dx;
+    sx = get_direction(line->a->x, line->b->x);
+    sy = get_direction(line->a->y, line->b->y); 
+    while (i <= dy)
+    {
+        put_pixel_to_image(vars, line->a->x, line->a->y, line->a->color);
+        line->a->y += sy;
+        if (p < 0)
+            p += 2 * dx;
+        else
+        {
+            line->a->x += sx;
+            p += 2 * dx - 2 * dy;
+        }
+        i++;
+    }
+}
+
+void    slope_less_than_one(t_vars *vars, int dx, int dy, t_line *line)
+{
+    int p;
+    int i;
+    int sx;
+    int sy;
+
+    i = 0;
+    p = 2 * dy - dx;
+    sx = get_direction(line->a->x, line->b->x);
+    sy = get_direction(line->a->y, line->b->y);
+    while (i <= dx)
+    {
+        put_pixel_to_image(vars, line->a->x, line->a->y, line->a->color);
+        line->a->x += sx;
+        if (p < 0)
+            p = p + 2 * dy;
+        else
+        {
+            line->a->y += sy;
+            p = p + 2 * dy - 2 * dx;
+        }
+        i++;
+    }
+}
+void    draw_line(t_vars *vars, t_line *line)
+{
+    int dx;
+    int dy;
+
+    dx = abs(line->b->x - line->a->x);
+    dy = abs(line->b->y - line->a->y);
+    if ( abs(dy) <= abs(dx))
+    {
+        if (line->a->x > line->b->x)
+            swap(line->a, line->b);
+        slope_less_than_one(vars, dx, dy, line);
+    }
+    else
+    {
+        if( line->a->y > line->b->y)
+            swap(line->a, line->b);
+        slope_greater_than_one(vars, dx, dy, line);
+    }
+}
+
+void    draw_grid_y(t_vars *vars, t_map *map_data, char **map)
+{
+    char    **data;
+    char    **data2;
+    int i;
+    int j;
+    t_line *line;
+
+    i = 0;
+    line = malloc(sizeof(t_line));
+    while(map[i] && i < map_data->heigth - 1) 
+    {
+        data = ft_split(map[i], ' ');
+        data2 = ft_split(map[i + 1], ' ');
+        j = 0;
+        while(data2[j])
+        {
+            line->a = get_point(i, j, ft_split(data[j], ','), map_data);
+            line->b = get_point(i + 1, j, ft_split(data2[j], ','), map_data);
+            draw_line(vars, line);
+            j++;
+        }
+        free_matrix(data2);
+        free_matrix(data);
+        i++;
+    }
+}
+
+void    draw_grid_x(t_vars *vars, t_map *map_data, char **map)
+{
+    char    **data;
+    int i;
+    int j;
+    t_line *line = malloc(sizeof(t_line));
+
+    i = 0;
+    while(map[i])
+    {
+        j = 0;
+        data = ft_split(map[i], ' ');
+        while (j < map_data->width - 1)
+        {
+            line->a = get_point(i, j, ft_split(data[j], ','), map_data);
+            line->b = get_point(i, j + 1, ft_split(data[j + 1], ','), map_data);
+            draw_line(vars, line);
+            j++;
+        }
+        free_matrix(data);
+        i++;
+    }
+}
+
+# include "fdf.h"
+
+int interpolate(int start, int end, float ratio)
+{
+    int inter;
+    inter = (int)(start + (end - start) * ratio);
+    return (inter);
+}
+
+int rgb_to_int(t_color *color)
+{
+    int color = 0;
+
+    color |= (int)(color->r * 255) << 16;
+    color |= (int)(color->g * 255) << 8;
+    color |= (int)(color->b * 255);
+    return (color);
+}
+
+int get_gradient(int z, int min_z, int max_z)
+{
+    float ratio;
+    int final_color;
+    t_color *color;
+
+    if (max_z == min_z)
+        ratio = 1;
+    else 
+        ratio = (float)(z - min_z) / (max_z - min_z);
+    
+    color->r = interpolate((start_color >> 16) & 0xFF, (end_color >> 16) & 0xFF, ratio);
+	color->g = interpolate((start_color >> 8) & 0xFF, (end_color >> 8) & 0xFF, ratio);
+	color->b = interpolate(start_color & 0xFF, end_color & 0xFF, ratio);
+
+    final_color = rgb_to_int(color);
+    return(final_color);
+}
+
+int get_color(int z, int min_z, int max_z)
+{
+    int color;
+
+    if (z == max_z)
+        color = TOP_COLOR;
+    else if (z == min_z)
+        color = BASE_COLOR;
+    else
+        color = get_gradient(z, min_z, max_z);
+
+    return (color);
+}
+# include "fdf.h"
+
+void    free_matrix(char **matrix)
+{
+    int i;
+
+    if (!matrix)
+        return;
+    i = 0;
+    while(matrix[i])
+    {
+        free(matrix[i]);
+        i++;
+    }
+    free(matrix);
+}
+int get_direction(int x1, int x2)
+{
+    int sx;
+
+    if (x1 < x2)
+        sx = 1;
+    else
+        sx = -1;
+    return (sx);
+}
+
+void    swap(t_point *a, t_point *b)
+{
+    t_point tmp;
+
+    tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+void put_pixel_to_image(t_vars *vars, int x, int y, int color)
+{
+    char *dst;
+
+    if (x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGTH)
+    {
+        dst = vars->addr + (y * vars->line_length + x * (vars->bits_per_pixel / 8));
+        *(unsigned int *)dst = color;
+    }
+}
+
+unsigned int ft_atoi_hex(char *str)
+{
+    unsigned int num;
+    int i;
+    char    digit;
+
+    i = 0;
+    num = 0;
+    if (str[0] == '0' && (str[1] == 'x'))
+        i = 2;
+    while(str[i])
+    {
+        digit = str[i];
+        num *= 16;
+        if (digit >= '0' && digit <= '9')
+            num += digit - '0';
+        else if (digit >= 'a' && digit <= 'f')
+            num += digit - 'a' + 10;
+        else if (digit >= 'A' && digit <= 'F')
+            num += digit - 'A' + 10;
+        else
+            break;
+        i++; 
+    }
+    return (num);
+}
+# include "fdf.h"
+
+void	isometric(int *x, int *y, int z)
+{
+	double	angle;
+	int		prev_x;
+	int		prev_y;
+
+	angle = M_PI / 6;
+	prev_x = *x;
+	prev_y = *y;
+	*x = (prev_x - prev_y) * cos(angle);
+	*y = (prev_x + prev_y) * sin(angle) - z;
+}
+double	get_scale(t_map *map_data)
+{
+	double	scale_x;
+	double	scale_y;
+	double	scale_z;
+	double	scale;
+
+	scale_x = (MAP_WIDTH - (MARGIN * 2)) / (double)map_data->width;
+	scale_y = (MAP_HEIGTH - (MARGIN * 2)) / (double)map_data->heigth;
+	if (map_data->max_z - map_data->min_z != 0)
+		scale_z = (MAP_HEIGTH - (MARGIN * 2))
+			/ (double)(map_data->max_z - map_data->min_z);
+	else
+		scale_z = scale_y;
+	scale = fmin(scale_x, scale_y);
+	scale = fmin(scale, scale_z);
+	return (scale * 0.8);
+}
+void	scale_points(int *i, int *j, int *z, t_map *map_data)
+{
+	double	scale;
+	double	scaled_z;
+
+	scale = get_scale(map_data);
+	*i = (int)((double)*i * scale);
+	*j = (int)((double)*j * scale);
+	scaled_z = ((double)(*z - map_data->min_z)) * (scale / 2);
+	*z = (int)scaled_z;
+}
+static void	point_data(t_point *point, int x, int y, char **extra_data, t_map *map_data)
+{
+	if (!extra_data[1])
+		point->color = get_color(ft_atoi(extra_data[0]), map_data);
+	else
+		point->color = ft_atoi_hex(extra_data[1]);
+	point->x = x;
+	point->y = y;
+}
+
+t_point	*get_point(int i, int j, char **extra_data, t_map *map_data)
+{
+	t_point	*point;
+	double	scale;
+	int		x;
+	int		y;
+	int		z;
+
+	point = malloc(sizeof(t_point));
+	if (!point)
+		return (NULL);
+	z = ft_atoi(extra_data[0]);
+	scale = get_scale(map_data);
+	scale_points(&i, &j, &z, map_data);
+	x = j;
+	y = i;
+	isometric(&x, &y, z);
+	x += MAP_WIDTH / 2;
+	y += MAP_HEIGTH / 2;
+	point_data(point, x, y, extra_data, map_data);
+	return (point);
+}
+# include "fdf.h"
+
+int	close_window(t_vars *vars)
+{
+    mlx_destroy_window(vars->mlx, vars->win);
+    mlx_destroy_image(vars->mlx, vars->img);
+    exit(0);
+}
+
+int key_pressed(int keycode, t_vars *vars)
+{
+    if (keycode == ESCAPE)
+        close_window(vars);
+    return (0);
+}
+void cleanup_window(t_vars *vars)
+{
+    if (vars->win)
+        mlx_destroy_window(vars->mlx, vars->win);
+}
+void cleanup_images(t_vars *vars)
+{
+    if (vars->img)
+        mlx_destroy_image(vars->mlx, vars->img);
+}
+void cleanup_display(t_vars *vars)
+{
+    if (vars->mlx)
+    {
+        mlx_destroy_display(vars->mlx); // Solo en sistemas Linux
+        free(vars->mlx);
+    }
+}
+int close_program(t_vars *vars)
+{
+    cleanup_images(vars);
+    cleanup_window(vars);
+    cleanup_display(vars);
+    exit(0);
+    return (0);
+}
+
+# include "fdf.h"
+/*
+int main(int argc, char **argv)
+{
+    t_vars *vars = malloc(sizeof(t_vars));
+    t_map *map_data = malloc(sizeof(t_map));
+    char **map;
+    char    *map_name;
+    
+    if (argc != 2)
+        return(1);
+    map_name = argv[argc - 1];
+    vars->mlx = mlx_init();
+    vars->win = mlx_new_window(vars->mlx, MAP_WIDTH, MAP_HEIGTH, "Fdf");
+
+    vars->img = mlx_new_image(vars->mlx, MAP_WIDTH, MAP_HEIGTH);
+    vars->addr = mlx_get_data_addr(vars->img, &vars->bits_per_pixel, &vars->line_length, &vars->endian);
+    
+    map_data->heigth = get_heigth(map_name);
+    map = get_map(map_name, map_data->heigth);
+    map_data->width = get_width(map);
+    map_data->min_z = get_minz(map);
+    map_data->max_z = get_maxz(map);
+
+    draw_grid_x(vars, map_data, map);
+    draw_grid_y(vars, map_data, map);
+
+    mlx_put_image_to_window(vars->mlx, vars->win, vars->img, 0, 0);
+
+    hooks(vars);
+
+    
+    mlx_hook(vars->win, 2, 1L<<0, key_pressed, vars);
+    mlx_hook(vars->win, 17, 1L<<17, close_program, vars);
+    mlx_loop(vars->mlx);
+    
+    
+    free_matrix(map);
+    free(vars);
+    free(map_data);
+    return (0);
+}
+*/
+
+t_map get_data(int argc, char **argv)
+{
+    char    **map;
+    t_map *map_data;
+
+    map_data = NULL;
+
+    map_data->heigth = get_heigth(argv[argc - 1]);
+    map = get_map(argv[argc - 1], map_data->heigth);
+    map_data->width = get_width(map);
+    map_data->min_z = get_minz(map);
+    map_data->max_z = get_maxz(map);
+    return (map_data);
+}
+
+void    hooks(t_vars *vars)
+{
+    mlx_hook(vars->win, 2, 1L<<0, key_pressed, vars);
+    mlx_hook(vars->win, 17, 1L<<17, close_program, vars);
+    mlx_loop(vars->mlx);
+}
+
+int main(int argc, char **argv)
+{
+    t_vars *vars;
+    t_map *map_data;
+    char **map;
+    
+    if (argc != 2)
+        return (1);
+   
+    map_data = get_data(argc, argv);
+    vars->mlx = mlx_init();
+    vars->win = mlx_new_window(vars->mlx, MAP_WIDTH, MAP_HEIGTH, "Fdf");
+    vars->img = mlx_new_image(vars->mlx, MAP_WIDTH, MAP_HEIGTH);
+    vars->addr = mlx_get_data_addr(vars->img, &vars->bits_per_pixel, &vars->line_length, &vars->endian);
+    draw_grid_x(vars, map_data, map);
+    draw_grid_y(vars, map_data, map);
+    mlx_put_image_to_window(vars->mlx, vars->win, vars->img, 0, 0);
+    hooks(vars);
+    free_matrix(map);
+    free(vars);
+    free(map_data);
+    return (0);
+}
+
+
+
+
+

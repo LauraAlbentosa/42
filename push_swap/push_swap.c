@@ -1,47 +1,52 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/29 19:43:39 by lalbento          #+#    #+#             */
-/*   Updated: 2025/01/29 21:40:46 by lalbento         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+# include "push_swap.h"
 
-#include "push_swap.h"
-
-int main(int argc, char **argv)
+int    sorted(t_stack *stack)
 {
-    char    **array_numbers;
-    t_stack *stack_a;
-
-    stack_a = NULL;
-
-
-    if (argc != 2)
-        return(1);
-    array_numbers = ft_split(argv[1], ' ');
-    create_stack(&stack_a, array_numbers);
-
-    t_stack *current = stack_a;
-
-    while(current)
+    if (!stack)
+        return(0);
+    while (stack->next)
     {
-        printf("%i\n", current->num);
-        current = current->next;
+        if (stack->num > stack->next->num)
+            return(0);
+        stack = stack->next;
+        
     }
+    return(1);
+}
 
-    printf("\n");
-    reverse_rotate(&stack_a);
+void    sort_three(t_stack **a)
+{
+    t_stack **max;
 
-    current = stack_a;
+    max = find_max(*a);
+    if(max == *a)
+        ra(a);
+    else if ((*a)->next == max)
+        rra(a);
+    if((*a)->num > (*a)->next->num)
+        swap_a(a);
+}
 
-    while(current)
+void    sort_stacks(t_stack **a, t_stack **b)
+{
+    int len_a;
+
+    len_a = stack_len(*a);
+    if (len_a - 1 > 3 && !sorted(*a))
+        push_b(b, a);
+    if (len_a - 1 > 3 && !sorted(*a))
+        push_b(b, a);
+    while(len_a - 1 > 3 && !sorted(*a))
     {
-        printf("%i\n", current->num);
-        current = current->next;
+        init_a(*a, *b);
+        move_a_b(a,b);
     }
-    return(0);
+    sort_three(a);
+    while(*b)
+    {
+        init_b(*a,*b);
+        move_b_a(a,b);
+    }
+    current_index(*a);
+    check_min(a);
 }

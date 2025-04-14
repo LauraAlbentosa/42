@@ -30,6 +30,40 @@ int stack_len(t_stack **stack)
     return(i);
 }
 
+t_stack *find_min(t_stack *stack)
+{
+    long    min;
+    t_stack *min_node;
+    
+    if(!stack)
+        return(NULL);
+    min = LONG_MAX;
+    while (stack)
+    {
+        if (stack->num < min)
+        {
+            min = stack->num;
+            min_node = stack;  
+        }
+        stack = stack->next;
+    }
+    return(min_node);
+}
+
+bool    stack_sorted(t_stack *stack)
+{
+    if (!stack)
+        return(1);
+    while (stack->node)
+    {
+        if (stack->num > stack->next->num)
+            return(0);
+        stack = stack->next;
+        
+    }
+    return(1);
+}
+
 t_stack *new_stack(int num)
 {
     t_stack *new_node;
@@ -59,7 +93,7 @@ void stack_add_back(t_stack **stack, t_stack *new_node)
 
 void   create_stack(t_stack **a, char **array_numbers)
 {
-    int    nbr;
+    long    nbr;
     t_stack  *new_node;
     int i;
 
@@ -73,4 +107,12 @@ void   create_stack(t_stack **a, char **array_numbers)
         stack_add_back(a, new_node);
         i++;
     }
+}
+void    init_nodes_a(t_stack *stack_a, t_stack *stack_b)
+{
+    current_index(stack_a);
+    current_index(stack_b);
+    set_target_a(stack_a, stack_b);
+    cost(stack_a, stack_b);
+    cheapest(stack_a);
 }

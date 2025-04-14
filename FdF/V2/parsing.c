@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lalbento <lalbento@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/09 12:40:42 by lalbento          #+#    #+#             */
+/*   Updated: 2024/12/11 12:37:38 by lalbento         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # include "fdf.h"
 
 int get_heigth(char *filename)
@@ -47,7 +59,7 @@ char    **get_map(char *filename, int size)
         line = get_next_line(fd);
         i++;
     }
-    //free(line);
+    free(line);
     map[i] = NULL;
     close(fd);
     return (map);
@@ -58,7 +70,6 @@ int get_width(char **map)
     int width;
     char    **line;
 
-    width = 0;
     line = ft_split(map[0], ' ');
     if (!line)
         return (0);
@@ -120,31 +131,3 @@ int get_maxz(char **map)
     }
     return (maxz);
 }
-
-/*
-char	**get_map(char *filename, int size)
-{
-	int		fd;
-	int		i;
-	char	**map;
-	char	*line;
-
-	i = 0;
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		return (NULL);
-	map = malloc((size + 1) * sizeof(char *));
-	if (!map)
-		return (NULL);
-	while (i < size)
-	{
-		line = get_next_line(fd);
-		if (!line)
-			break ;
-		map[i++] = line;
-	}
-	map[i] = NULL;
-	close(fd);
-	return (map);
-}
-*/
