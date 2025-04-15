@@ -1,5 +1,5 @@
 # include "fdf.h"
-
+/*
 int interpolate(int start, int end, float ratio)
 {
     int inter;
@@ -17,12 +17,12 @@ int rgb_to_int(t_color *color)
     result |= (int)(color->b * 255);
     return (result);
 }
-
+*/
 int get_gradient(int z, int min_z, int max_z)
 {
     float ratio;
     int final_color;
-    t_color *color;
+    t_color color;
 
     color = malloc(sizeof(t_color));
     if (!color)
@@ -32,11 +32,15 @@ int get_gradient(int z, int min_z, int max_z)
         ratio = 1;
     else 
         ratio = (float)(z - min_z) / (max_z - min_z);
-    
+
+    color.r = interpolate((start_color >> 16) & 0xFF, (end_color >> 16) & 0xFF, ratio) / 255.0;
+    color.g = interpolate((start_color >> 8) & 0xFF, (end_color >> 8) & 0xFF, ratio) / 255.0;
+    color.b = interpolate(start_color & 0xFF, end_color & 0xFF, ratio) / 255.0;
+    /*
     color->r = interpolate((start_color >> 16) & 0xFF, (end_color >> 16) & 0xFF, ratio);
 	color->g = interpolate((start_color >> 8) & 0xFF, (end_color >> 8) & 0xFF, ratio);
 	color->b = interpolate(start_color & 0xFF, end_color & 0xFF, ratio);
-
+    */
     final_color = rgb_to_int(color);
     return(final_color);
 }
@@ -54,3 +58,12 @@ int get_color(int z, int min_z, int max_z)
 
     return (color);
 }
+
+
+int lerp(int first, int second, double p)
+{
+    if (first == second)
+        return (first);
+    return((int)((double)first + (second - first) * p));
+}
+

@@ -27,16 +27,17 @@ void    sort_three(t_stack **a)
         sa(a);
 }
 
+
 void    sort_stacks(t_stack **a, t_stack **b)
 {
     int len_a;
 
     len_a = stack_len(*a);
-    if (len_a - 1 > 3 && !sorted(*a))
+    if (len_a-- > 3 && !sorted(*a))
         pb(b, a);
-    if (len_a - 1 > 3 && !sorted(*a))
+    if (len_a-- > 3 && !sorted(*a))
         pb(b, a);
-    while(len_a - 1 > 3 && !sorted(*a))
+    while(len_a-- > 3 && !sorted(*a))
     {
         init_a(*a, *b);
         a_b(a,b);
