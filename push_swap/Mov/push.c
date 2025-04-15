@@ -58,7 +58,7 @@ void push_b(t_stack **stack_a, t_stack **stack_b)
     *stack_a = first_b;
     write(1, "pb\n", 3);
 }
-*/
+
 void push_a(t_stack **stack_a, t_stack **stack_b)
 {
     t_stack *first_b;
@@ -89,5 +89,43 @@ void push_b(t_stack **stack_a, t_stack **stack_b)
     if (*stack_b)
         (*stack_b)->prev = first_a;
     *stack_b = first_a;
+    write(1, "pb\n", 3);
+}
+*/
+
+
+static void	push(t_stack **dst, t_stack **src) 
+{
+	t_stack	*push_node; 
+
+	if (!*src) 
+		return ;
+	push_node = *src; 
+	*src = (*src)->next; 
+	if (*src) 
+		(*src)->prev = NULL; 
+	push_node->prev = NULL; 
+	if (!*dst) 
+	{
+		*dst = push_node; 
+		push_node->next = NULL; 
+	}
+	else 
+	{
+		push_node->next = *dst; 
+		push_node->next->prev = push_node; 
+		*dst = push_node; 
+	}
+}
+
+void	pa(t_stack **a, t_stack **b) 
+{
+	push(a, b); 
+    write(1, "pa\n", 3);
+}
+
+void	pb(t_stack **b, t_stack **a) 
+{
+	push(b, a);
     write(1, "pb\n", 3);
 }

@@ -30,7 +30,7 @@
     last->next = *stack;
     *stack = last;
 }
- */
+ 
 
 void reverse_rotate(t_stack **stack)
 {
@@ -54,8 +54,21 @@ void reverse_rotate(t_stack **stack)
         (*stack)->prev = last;
     *stack = last;
 }
+*/
 
+static void	reverse_rotate(t_stack**stack) 
+{
+	t_stack	*last; 
 
+	if (!*stack || !(*stack)->next) 
+		return ;
+	last = find_last(*stack);
+	last->prev->next = NULL; /
+	last->next = *stack; 
+	last->prev = NULL; 
+	*stack = last;  
+	last->next->prev = last; 
+}
 
 void    rra(t_stack **a)
 {
@@ -73,4 +86,3 @@ void    rrr(t_stack **a, t_stack **b)
     reverse_rotate(b);
     write(1, "rrr\n", 4);
 }
-

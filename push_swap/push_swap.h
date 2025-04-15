@@ -50,6 +50,7 @@ t_stack *get_cheapest(t_stack *stack);
 
 
 
+
 //manage stacks
 void    create_stack_a(t_stack **a, char **numbers);
 void    append_node(t_stack **stack, int n);
@@ -72,7 +73,7 @@ void free_stacks(t_stack **stack);
 void    display_error(t_stack **stack);
 
 
-//movs
+/*movs
 void    push_a(t_stack **stack_a, t_stack **stack_b);
 void    push_b(t_stack **stack_a, t_stack **stack_b);
 void    reverse_rotate(t_stack **stack);
@@ -85,6 +86,20 @@ void    rb(t_stack **b);
 void    rr(t_stack **a, t_stack **b);
 void    swap_a(t_stack **stack);
 void    swap_b(t_stack **stack);
+*/
 
+void	pa(t_stack **a, t_stack **b);
+void	pb(t_stack **b, t_stack **a);
+void    rra(t_stack **a);
+void    rrb(t_stack **b);
+void    rrr(t_stack **a, t_stack **b);
+void    ra(t_stack **a);
+void    rb(t_stack **b);
+void    rr(t_stack **a, t_stack **b);
+void	ss(t_stack **a, t_stack **b);
+void	sb(t_stack **b);
+void	sa(t_stack	**a);
+void	rev_rotate_both(t_stack **a, t_stack **b, t_stack *cheapest_node);
+void	rotate_both(t_stack **a, t_stack **b, t_stack *cheapest_node);
 #endif
 

@@ -17,7 +17,7 @@ void    a_b(t_stack **a, t_stack **b)
 void b_a(t_stack **a, t_stack **b) 
 {
 	node_to_top(a, (*b)->target_node, 'a'); 
-	push_a(a, b); 
+	pa(a, b); 
 }
 
 
@@ -29,15 +29,15 @@ void a_b(t_stack **a, t_stack **b)
     while (*a != cheapest_node && *b != cheapest_node->target_node)
     {
         if (cheapest_node->medium && cheapest_node->target_node->medium)
-            rr(a, b);
+            rotate_both(a, b, cheapest_node);
         else if (!cheapest_node->medium && !cheapest_node->target_node->medium)
-            rrr(a, b);
+            rev_rotate_both(a, b, cheapest_node);
         else
             break;
     }
     node_to_top(a, cheapest_node, 'a');
     node_to_top(b, cheapest_node->target_node, 'b');
-    push_b(b, a);
+    pb(b, a);
 }
 
 

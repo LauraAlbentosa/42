@@ -29,7 +29,7 @@ void    rotate(t_stack **stack)
     *stack = first->next;
     first->next = NULL;
 }
-*/
+
 
 void rotate(t_stack **stack)
 {
@@ -51,6 +51,22 @@ void rotate(t_stack **stack)
     first->next = NULL;
 }
 
+*/
+
+static void	rotate(t_stack **stack) 
+{
+	t_stack	*last_node; 
+
+	if (!*stack || !(*stack)->next) 
+		return ;
+	last_node = find_last(*stack); 
+	last_node->next = *stack; 
+	*stack = (*stack)->next; 
+	(*stack)->prev = NULL; 
+	last_node->next->prev = last_node; 
+	last_node->next->next = NULL; 
+}		
+
 
 void    ra(t_stack **a)
 {
@@ -70,3 +86,24 @@ void    rr(t_stack **a, t_stack **b)
     rotate(b);
     write(1, "rr\n", 3);
 }
+
+void	rotate_both(t_stack **a, t_stack **b, t_stack *cheapest_node) 
+{
+	while (*b != cheapest_node->target_node
+		&& *a != cheapest_node) 
+		rr(a, b); 
+	current_index(*a);
+	current_index(*b);
+}
+
+void	rev_rotate_both(t_stack **a, t_stack **b, t_stack *cheapest_node) 
+{
+	while (*b != cheapest_node->target_node
+		&& *a != cheapest_node) 
+		rrr(a, b); /
+	current_index(*a); 
+	current_index(*b);
+}
+
+
+

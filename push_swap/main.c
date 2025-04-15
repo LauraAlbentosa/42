@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     if (!sorted(a))
     {
         if (stack_len(a) == 2)
-            swap_a(&a);
+            sa(&a);
         else if (stack_len(a) == 3)
             sort_three(&a);
         else
