@@ -122,7 +122,6 @@ void cheapest(t_stack *stack)
 {
     int cheapest_value;
     t_stack *cheap_node;
-    //t_stack *head = stack;
 
     if (!stack)
         return;
@@ -130,7 +129,7 @@ void cheapest(t_stack *stack)
     cheapest_value = INT_MAX;
     while (stack)
     {
-        stack->cheapest = 0;  // <- Limpia antes
+        stack->cheapest = 0;  
         if (stack->cost < cheapest_value)
         {
             cheapest_value = stack->cost;

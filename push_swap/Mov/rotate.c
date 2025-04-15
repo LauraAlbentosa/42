@@ -100,7 +100,7 @@ void	rev_rotate_both(t_stack **a, t_stack **b, t_stack *cheapest_node)
 {
 	while (*b != cheapest_node->target_node
 		&& *a != cheapest_node) 
-		rrr(a, b); /
+		rrr(a, b); 
 	current_index(*a); 
 	current_index(*b);
 }

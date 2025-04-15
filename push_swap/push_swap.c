@@ -3,7 +3,7 @@
 int    sorted(t_stack *stack)
 {
     if (!stack)
-        return(0);
+        return(1);
     while (stack->next)
     {
         if (stack->num > stack->next->num)

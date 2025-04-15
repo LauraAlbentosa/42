@@ -23,21 +23,16 @@ void b_a(t_stack **a, t_stack **b)
 
 void a_b(t_stack **a, t_stack **b)
 {
-    t_stack *cheapest_node;
+    t_stack	*cheapest_node;
 
-    cheapest_node = get_cheapest(*a);
-    while (*a != cheapest_node && *b != cheapest_node->target_node)
-    {
-        if (cheapest_node->medium && cheapest_node->target_node->medium)
-            rotate_both(a, b, cheapest_node);
-        else if (!cheapest_node->medium && !cheapest_node->target_node->medium)
-            rev_rotate_both(a, b, cheapest_node);
-        else
-            break;
-    }
-    node_to_top(a, cheapest_node, 'a');
-    node_to_top(b, cheapest_node->target_node, 'b');
-    pb(b, a);
+	cheapest_node = get_cheapest(*a); 
+	if (cheapest_node->medium && cheapest_node->target_node->medium) 
+		rotate_both(a, b, cheapest_node);
+	else if (!(cheapest_node->medium) && !(cheapest_node->target_node->medium)) 
+		rev_rotate_both(a, b, cheapest_node); 
+	node_to_top(a, cheapest_node, 'a'); 
+	node_to_top(b, cheapest_node->target_node, 'b');
+	pb(b, a);
 }
 
 
